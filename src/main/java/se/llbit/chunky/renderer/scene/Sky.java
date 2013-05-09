@@ -44,6 +44,21 @@ import se.llbit.util.ProgramProperties;
 public class Sky {
 
 	/**
+	 * Default sky light intensity
+	 */
+	public static final double DEFAULT_INTENSITY = 1;
+
+	/**
+	 * Maximum sky light intensity
+	 */
+	public static final double MAX_INTENSITY = 50;
+
+	/**
+	 * Minimum sky light intensity
+	 */
+	public static final double MIN_INTENSITY = 0.01;
+
+	/**
 	 * Sky rendering mode
 	 * @author Jesper Öqvist <jesper@llbit.se>
 	 */
@@ -85,6 +100,8 @@ public class Sky {
 	private final Scene scene;
 	private double rotation;
 	private boolean mirrored = true;
+
+	private double light = DEFAULT_INTENSITY;
 
 	// final to ensure that we don't do a lot of redundant re-allocation
 	private final Vector3d groundColor = new Vector3d(0, 0, 1);
@@ -373,4 +390,21 @@ public class Sky {
 	public SkyMode getSkyMode() {
 		return mode;
 	}
+
+	/**
+	 * Set the sky light modifier
+	 * @param newValue
+	 */
+	public void setSkyLight(double newValue) {
+		light = newValue;
+		scene.refresh();
+	}
+
+	/**
+	 * @return Current sky light modifier
+	 */
+	public double getSkyLight() {
+		return light;
+	}
+
 }
