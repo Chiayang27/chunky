@@ -157,6 +157,7 @@ public class Sky {
 		skymap = other.skymap;
 		rotation = other.rotation;
 		mirrored = other.mirrored;
+		light = other.light;
 		groundColor.set(other.groundColor);
 	}
 
@@ -180,6 +181,7 @@ public class Sky {
 			return;
 		} else if (skymap == null) {
 			scene.sun().skylight(ray);
+			ray.color.scale(light);
 			ray.hit = true;
 			return;
 		}
@@ -197,6 +199,7 @@ public class Sky {
 		}
 		double phi = QuickMath.abs(FastMath.asin(ray.d.y));
 		skymap.getColor(theta / (2*Math.PI), (2 * phi / Math.PI), ray.color);
+		ray.color.scale(light);
 		ray.hit = true;
 	}
 
@@ -273,6 +276,7 @@ public class Sky {
 			double g = ray.color.y;
 			double b = ray.color.z;
 			getSkyDiffuseColor(ray, blackBelowHorizon);
+			ray.color.scale(light);
 			ray.color.x = ray.color.x + r;
 			ray.color.y = ray.color.y + g;
 			ray.color.z = ray.color.z + b;
@@ -312,6 +316,7 @@ public class Sky {
 			rotation = rotationTag.doubleValue();
 		}
 		mirrored = worldTag.get("skyMirrored").boolValue(true);
+		light = worldTag.get("skyLight").doubleValue(DEFAULT_INTENSITY);
 
 		if (worldTag.get("groundColor").isCompoundTag()) {
 			CompoundTag colorTag = (CompoundTag) worldTag.get("groundColor");
@@ -330,6 +335,7 @@ public class Sky {
 			worldTag.addItem("skymapFileName", new StringTag(skymapFileName));
 		worldTag.addItem("skyYaw", new DoubleTag(rotation));
 		worldTag.addItem("skyMirrored", new IntTag(mirrored));
+		worldTag.addItem("skyLight", new DoubleTag(light));
 		CompoundTag groundColorTag = new CompoundTag();
 		groundColorTag.addItem("red", new DoubleTag(groundColor.x));
 		groundColorTag.addItem("green", new DoubleTag(groundColor.y));
